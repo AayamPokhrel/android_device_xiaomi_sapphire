@@ -63,11 +63,11 @@ def blob_fixup_thermald_devices(
     for i, line in enumerate(lines):
         if not in_battery and '#battery' in line:
             in_battery = True
-            lines[i] = line.replace('select_higher: 1', 'select_higher: 0', 1)
+            lines[i] = line.replace('select_higher: 1', 'select_higher: 0').replace('select_higher:1', 'select_higher:0')
             continue
 
         if in_battery:
-            lines[i] = line.replace('select_higher: 1', 'select_higher: 0', 1)
+            lines[i] = line.replace('select_higher: 1', 'select_higher: 0').replace('select_higher:1', 'select_higher:0')
             if ']' in line:
                 in_battery = False
 
@@ -99,8 +99,6 @@ blob_fixups: blob_fixups_user_type = {
         'vendor/bin/vendor.dpmd',
     ): blob_fixup()
         .add_needed('libshim.so'),
-    'vendor/etc/seccomp_policy/atfwd@2.0.policy': blob_fixup()
-        .add_line_if_missing('gettid: 1'),
     'vendor/lib64/vendor.libdpmframework.so': blob_fixup()
         .add_needed('libhidlbase_shim.so'),
     'vendor/etc/seccomp_policy/c2audio.vendor.ext-arm64.policy': blob_fixup()
