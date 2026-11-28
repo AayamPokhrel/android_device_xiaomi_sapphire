@@ -11,14 +11,11 @@ include vendor/xiaomi/sapphire/BoardConfigVendor.mk
 include device/xiaomi/miuicamera-sapphire/BoardConfig.mk
 
 DEVICE_PATH := device/xiaomi/sapphire
-KERNEL_PATH := $(DEVICE_PATH)-kernel
-
-TARGET_KERNEL_CLANG_VERSION := neutron-clang
-
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_INCORRECT_PARTITION_IMAGES := true
 RELAX_USES_LIBRARY_CHECK := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 
 # A/B
 AB_OTA_UPDATER := true
@@ -75,6 +72,7 @@ $(call soong_config_set, ufsbsg, ufsframework, bsg)
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := bengal
+TARGET_NO_BOOTLOADER := true
 
 # Camera
 TARGET_CAMERA_OVERRIDE_FORMAT_FROM_RESERVED := true
@@ -103,29 +101,6 @@ TARGET_GLOBAL_THINLTO := true
 TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):init_sapphire
 TARGET_RECOVERY_DEVICE_MODULES := init_sapphire
 
-# Kernel prebuilt
-BOARD_USES_DT := true
-BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs
-BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbs/dtbo.img
-
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
-TARGET_NO_KERNEL_OVERRIDE := true
-TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/kernel
-
-PRODUCT_COPY_FILES += $(TARGET_PREBUILT_KERNEL):kernel
-
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_dlkm/modules.load))
-BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE :=  $(KERNEL_PATH)/vendor_dlkm/modules.blocklist
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat  $(KERNEL_PATH)/vendor_ramdisk/modules.load))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(KERNEL_PATH)/vendor_ramdisk/modules.blocklist
-BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/vendor_ramdisk/modules.load.recovery))
-
-PRODUCT_COPY_FILES += \
-    $(call find-copy-subdir-files,*,$(KERNEL_PATH)/system_dlkm/,$(TARGET_COPY_OUT_SYSTEM_DLKM)/lib/modules/5.15.94) \
-    $(call find-copy-subdir-files,*,$(KERNEL_PATH)/vendor_dlkm/,$(TARGET_COPY_OUT_VENDOR_DLKM)/lib/modules) \
-    $(call find-copy-subdir-files,*,$(KERNEL_PATH)/vendor_ramdisk/,$(TARGET_COPY_OUT_VENDOR_RAMDISK)/lib/modules)
-
 # Kernel
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_IMAGE_NAME := Image
@@ -150,9 +125,11 @@ BOARD_KERNEL_CMDLINE := \
     rcutree.enable_rcu_lazy=1
 
 TARGET_KERNEL_ARCH := arm64
-INLINE_KERNEL_BUILDING := true
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_VERSION := 5.15
+TARGET_KERNEL_SOURCE := kernel/xiaomi/sapphire
+TARGET_KERNEL_CONFIG := vendor/sapphire_defconfig
+TARGET_KERNEL_CLANG_VERSION := r596125
 
 # Lineage Health
 TARGET_HEALTH_CHARGING_CONTROL_CHARGING_PATH := /sys/class/qcom-battery/input_suspend
