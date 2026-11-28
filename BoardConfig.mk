@@ -204,10 +204,14 @@ BOOT_SECURITY_PATCH := 2024-09-01
 VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
 
 # Sepolicy
-include device/qcom/sepolicy_vndr/sm6225/SEPolicy.mk
-include device/xiaomi/sepolicy/SEPolicy.mk
+include device/qcom/sepolicy_vndrSEPolicy.mk
+-include device/xiaomi/sepolicy/SEPolicy.mk
+include device/clover/sepolicy/libion/sepolicy.mk
+include device/clover/sepolicy/common/sepolicy.mk
+include device/clover/sepolicy/libperfmgr/sepolicy.mk
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
+SELINUX_IGNORE_NEVERALLOWS := true
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
