@@ -7,6 +7,15 @@
 # Sign build
 include vendor/lineage-priv/keys/keys.mk
 
+# Extra flags
+TARGET_SUPPORTS_OMX_SERVICE := true
+PRODUCT_PACKAGES_REMOVE += \
+    Aperture
+
+CLOVER_MAINTAINER := AayamPokhrel
+WITH_GMS := true
+TARGET_ENABLE_BLUR := true
+
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
@@ -18,7 +27,9 @@ $(call inherit-product, device/xiaomi/sapphire/device.mk)
 $(call inherit-product, vendor/clover/config/common_full_phone.mk)
 
 # Device configs
-TARGET_BOOT_ANIMATION_RES = 1080
+TARGET_SCREEN_HEIGHT := 2400
+TARGET_SCREEN_WIDTH := 1080
+TARGET_BOOT_ANIMATION_RES := 1080
 TARGET_HAS_UDFPS := true
 
 PRODUCT_NAME := clover_sapphire
